@@ -1,15 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   Link,
-  Route,
-  Routes,
+  Outlet,
   useParams,
   useNavigate,
   useLocation,
 } from 'react-router-dom';
 import axios from 'axios';
-import MovieCast from '../../components/MovieCast/MovieCast';
-import MovieReviews from '../../components/MovieReviews/MovieReviews';
 
 const API_URL = 'https://api.themoviedb.org/3/movie';
 const API_KEY =
@@ -20,6 +17,7 @@ export default function MovieDetailsPage() {
   const [movie, setMovie] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const prevLocation = useRef(location.state?.from);
 
   useEffect(() => {
     axios
@@ -35,14 +33,14 @@ export default function MovieDetailsPage() {
   }, [movieId]);
 
   const goBack = () => {
-    navigate(location.state?.from ?? '/movies');
+    navigate(prevLocation.current ?? '/movies');
   };
 
   return (
     <div>
+      <button onClick={goBack}>Go back</button>
       {movie && (
         <>
-          <button onClick={goBack}>Go back</button>
           <h1>{movie.title}</h1>
           <img
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -51,20 +49,13 @@ export default function MovieDetailsPage() {
           <p>{movie.overview}</p>
           <ul>
             <li>
-              <Link to="cast" state={{ from: location.state?.from }}>
-                Cast
-              </Link>
+              <Link to="cast">Cast</Link>
             </li>
             <li>
-              <Link to="reviews" state={{ from: location.state?.from }}>
-                Reviews
-              </Link>
+              <Link to="reviews">Reviews</Link>
             </li>
           </ul>
-          <Routes>
-            <Route path="cast" element={<MovieCast />} />
-            <Route path="reviews" element={<MovieReviews />} />
-          </Routes>
+          <Outlet />
         </>
       )}
     </div>
