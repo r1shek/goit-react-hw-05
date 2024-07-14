@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import MovieList from '../../components/MovieList/MovieList';
 
 const API_URL = 'https://api.themoviedb.org/3/search/movie';
 const API_KEY =
@@ -26,9 +27,7 @@ export default function MoviesPage() {
           include_adult: false,
         },
       })
-      .then((response) => {
-        setMovies(response.data.results);
-      })
+      .then((response) => setMovies(response.data.results))
       .catch((error) => console.error(error));
   }, [query]);
 
@@ -50,13 +49,7 @@ export default function MoviesPage() {
         />
         <button type="submit">Search</button>
       </form>
-      <ul>
-        {movies.map((movie) => (
-          <li key={movie.id}>
-            <Link to={`/movies/${movie.id}`}>{movie.title}</Link>
-          </li>
-        ))}
-      </ul>
+      {movies.length > 0 && <MovieList movies={movies} />}
     </div>
   );
 }

@@ -26,9 +26,7 @@ export default function MovieDetailsPage() {
           Authorization: `Bearer ${API_KEY}`,
         },
       })
-      .then((response) => {
-        setMovie(response.data);
-      })
+      .then((response) => setMovie(response.data))
       .catch((error) => console.error(error));
   }, [movieId]);
 

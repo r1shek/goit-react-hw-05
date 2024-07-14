@@ -18,9 +18,7 @@ export default function MovieReviews() {
           Authorization: `Bearer ${API_KEY}`,
         },
       })
-      .then((response) => {
-        setReviews(response.data.results);
-      })
+      .then((response) => setReviews(response.data.results))
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   }, [movieId]);
